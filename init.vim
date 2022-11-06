@@ -1,6 +1,5 @@
 call plug#begin('~/.vim/plugged')
 
-"Plug 'fatih/vim-go', {  'tag': 'v1.22', 'do': ':GoUpdateBinaries' }
 Plug 'iCyMind/NeoSolarized'
 Plug 'vim-airline/vim-airline' " statusbar/tabline
 Plug 'vim-airline/vim-airline-themes'
@@ -9,7 +8,6 @@ Plug 'SirVer/ultisnips' " Ultimate snippets
 Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-"Plug 'joshdick/onedark.vim'
 Plug 'navarasu/onedark.nvim'
 Plug 'sheerun/vim-polyglot'
 Plug 'Yggdroot/indentLine'
@@ -28,6 +26,7 @@ Plug 'hrsh7th/cmp-cmdline'
 " "" luasnip
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'rafamadriz/friendly-snippets'
 
 Plug 'sebdah/vim-delve'
 
@@ -38,6 +37,11 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'f-person/auto-dark-mode.nvim'
+
+" Treesitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'p00f/nvim-ts-rainbow'
+
 
 call plug#end()
 
@@ -62,11 +66,12 @@ let g:mapleader = ','
 " LSP
 lua require("lsp_config")
 lua require("lsp_cmp_config")
+lua require("lsp_ts")
 lua require("trouble")
+lua require('luasnip.loaders.from_vscode').lazy_load()
 
 autocmd BufWritePre *.go lua OrgImports(1000)
-"autocmd BufWritePre *.go lua goimports(1000)
-autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
+autocmd BufWritePre *.go lua vim.lsp.buf.format { async = true }
 
 " Auto dark mode
 lua require("auto_dark_mod")
@@ -142,10 +147,6 @@ nnoremap <Leader>q :bw<CR>
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>ww :wq<CR>
 nnoremap <Leader>zz :q<CR>
-" NERDTree
-"nmap <C-t> :NERDTreeToggle<CR>
-"noremap <Leader>t :NERDTreeToggle<cr>
-"noremap <Leader>f :NERDTreeFind<cr>
 " Cursors
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
@@ -169,20 +170,11 @@ noremap <C-BS> bdw
 
 colorscheme onedark
 let g:onedark_style = 'cool'
-"let g:onedark_termcolors=16
-"let g:onedark_termcolors=256
-"set termguicolors
-"colorscheme NeoSolarized
-"let g:airline_theme='solarized'
 let g:airline_theme='onedark'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 
-
 let g:netrw_preview = 1
-
-"let g:polyglot_disabled = ['go']
-"
 
 " Telescope
 " https://github.com/nvim-telescope/telescope.nvim#default-mappings
